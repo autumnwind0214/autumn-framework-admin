@@ -1,5 +1,5 @@
 import { baseRequestClient, requestClient } from '#/api/request';
-import { base64Str } from "#/utils/base64";
+import { base64Str } from '#/utils/base64';
 
 const prefix = '/auth-api';
 

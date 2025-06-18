@@ -21,7 +21,7 @@ export const useAuthStore = defineStore('auth', () => {
   const loginLoading = ref(false);
 
   /**
-   * 异步处理登录操作
+   * 异步处理登录操作 用户名密码登录
    * Asynchronously handle the login process
    * @param params 登录表单数据
    * @param onSuccess
@@ -33,6 +33,7 @@ export const useAuthStore = defineStore('auth', () => {
     // 异步处理用户登录操作并获取 accessToken
     let userInfo: null | UserInfo = null;
     try {
+      params.grant_type = 'password_type';
       loginLoading.value = true;
       const { accessToken } = await loginApi(params);
       console.warn('accessToken', accessToken);
