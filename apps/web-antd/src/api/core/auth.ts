@@ -1,4 +1,7 @@
 import { baseRequestClient, requestClient } from '#/api/request';
+import { base64Str } from "#/utils/base64";
+
+const prefix = '/auth-api';
 
 export namespace AuthApi {
   /** 登录接口参数 */
@@ -22,7 +25,15 @@ export namespace AuthApi {
  * 登录
  */
 export async function loginApi(data: AuthApi.LoginParams) {
-  return requestClient.post<AuthApi.LoginResult>('/auth/login', data);
+  const headers: any = {
+    'Content-Type': 'application/x-www-form-urlencoded',
+    Authorization: `Basic ${base64Str('messaging-client:123456')}`,
+  };
+  return requestClient.post<AuthApi.LoginResult>(
+    `${prefix}/oauth2/token`,
+    data,
+    headers,
+  );
 }
 
 /**

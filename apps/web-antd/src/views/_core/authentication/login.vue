@@ -13,20 +13,20 @@ defineOptions({ name: 'Login' });
 
 const authStore = useAuthStore();
 
-const MOCK_USER_OPTIONS: BasicOption[] = [
-  {
-    label: 'Super',
-    value: 'vben',
-  },
-  {
-    label: 'Admin',
-    value: 'admin',
-  },
-  {
-    label: 'User',
-    value: 'jack',
-  },
-];
+// const MOCK_USER_OPTIONS: BasicOption[] = [
+//   {
+//     label: 'Super',
+//     value: 'vben',
+//   },
+//   {
+//     label: 'Admin',
+//     value: 'admin',
+//   },
+//   {
+//     label: 'User',
+//     value: 'jack',
+//   },
+// ];
 
 const formSchema = computed((): VbenFormSchema[] => {
   return [
@@ -35,23 +35,24 @@ const formSchema = computed((): VbenFormSchema[] => {
       componentProps: {
         placeholder: $t('authentication.usernameTip'),
       },
-      dependencies: {
-        trigger(values, form) {
-          if (values.selectAccount) {
-            const findUser = MOCK_USER_OPTIONS.find(
-              (item) => item.value === values.selectAccount,
-            );
-            if (findUser) {
-              form.setValues({
-                password: '123456',
-                username: findUser.value,
-              });
-            }
-          }
-        },
-        triggerFields: ['selectAccount'],
-      },
+      // dependencies: {
+      //   trigger(values, form) {
+      //     if (values.selectAccount) {
+      //       const findUser = MOCK_USER_OPTIONS.find(
+      //         (item) => item.value === values.selectAccount,
+      //       );
+      //       if (findUser) {
+      //         form.setValues({
+      //           password: '123456',
+      //           username: findUser.value,
+      //         });
+      //       }
+      //     }
+      //   },
+      //   triggerFields: ['selectAccount'],
+      // },
       fieldName: 'username',
+      defaultValue: 'admin',
       label: $t('authentication.username'),
       rules: z.string().min(1, { message: $t('authentication.usernameTip') }),
     },
@@ -61,6 +62,7 @@ const formSchema = computed((): VbenFormSchema[] => {
         placeholder: $t('authentication.password'),
       },
       fieldName: 'password',
+      defaultValue: '111111',
       label: $t('authentication.password'),
       rules: z.string().min(1, { message: $t('authentication.passwordTip') }),
     },

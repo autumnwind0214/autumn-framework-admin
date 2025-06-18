@@ -35,9 +35,9 @@ export const viteNitroMockPlugin = ({
       server.printUrls = () => {
         _printUrls();
 
-        consola.log(
-          `  ${colors.green('➜')}  ${colors.bold('Nitro Mock Server')}: ${colors.cyan(`http://localhost:${port}/api`)}`,
-        );
+        // consola.log(
+        //   `  ${colors.green('➜')}  ${colors.bold('Nitro Mock Server')}: ${colors.cyan(`http://localhost:${port}/api`)}`,
+        // );
       };
     },
     enforce: 'pre',

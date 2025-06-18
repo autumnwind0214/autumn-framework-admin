@@ -24,6 +24,7 @@ export const useAuthStore = defineStore('auth', () => {
    * 异步处理登录操作
    * Asynchronously handle the login process
    * @param params 登录表单数据
+   * @param onSuccess
    */
   async function authLogin(
     params: Recordable<any>,
@@ -34,6 +35,7 @@ export const useAuthStore = defineStore('auth', () => {
     try {
       loginLoading.value = true;
       const { accessToken } = await loginApi(params);
+      console.warn('accessToken', accessToken);
 
       // 如果成功获取到 accessToken
       if (accessToken) {
