@@ -21,6 +21,9 @@ import { refreshTokenApi } from './core';
 
 const { apiURL } = useAppConfig(import.meta.env, import.meta.env.PROD);
 
+// 定义白名单
+const whiteList = ['/oauth2/token'];
+
 function createRequestClient(baseURL: string, options?: RequestClientOptions) {
   const client = new RequestClient({
     ...options,
@@ -31,7 +34,7 @@ function createRequestClient(baseURL: string, options?: RequestClientOptions) {
    * 重新认证逻辑
    */
   async function doReAuthenticate() {
-    console.warn('Access token or refresh token is invalid or expired. ');
+    // console.warn('Access token or refresh token is invalid or expired. ');
     const accessStore = useAccessStore();
     const authStore = useAuthStore();
     accessStore.setAccessToken(null);
@@ -63,10 +66,16 @@ function createRequestClient(baseURL: string, options?: RequestClientOptions) {
   // 请求头处理
   client.addRequestInterceptor({
     fulfilled: async (config) => {
-      const accessStore = useAccessStore();
-
-      config.headers.Authorization = formatToken(accessStore.accessToken);
+      console.log('config:', config);
+      // 获取当前请求的路径
+      const { url } = config;
       config.headers['Accept-Language'] = preferences.app.locale;
+      // 如果当前的请求在白名单中，则跳过token添加
+      if (whiteList.some((item) => url?.includes(item))) {
+        return config;
+      }
+      const accessStore = useAccessStore();
+      config.headers.Authorization = formatToken(accessStore.accessToken);
       return config;
     },
   });
@@ -76,7 +85,7 @@ function createRequestClient(baseURL: string, options?: RequestClientOptions) {
     defaultResponseInterceptor({
       codeField: 'code',
       dataField: 'data',
-      successCode: 0,
+      messageField: 'message',
     }),
   );
 

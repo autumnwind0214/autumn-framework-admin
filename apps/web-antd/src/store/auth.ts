@@ -12,6 +12,7 @@ import { defineStore } from 'pinia';
 
 import { getAccessCodesApi, getUserInfoApi, loginApi, logoutApi } from '#/api';
 import { $t } from '#/locales';
+import { encryptRSA } from '#/utils/rsa';
 
 export const useAuthStore = defineStore('auth', () => {
   const accessStore = useAccessStore();
@@ -33,10 +34,14 @@ export const useAuthStore = defineStore('auth', () => {
     // 异步处理用户登录操作并获取 accessToken
     let userInfo: null | UserInfo = null;
     try {
+      await encryptRSA(params.password).then((data) => {
+        console.log('data', data);
+        params.password = data;
+      });
       params.grant_type = 'password_type';
       loginLoading.value = true;
       const { accessToken } = await loginApi(params);
-      console.warn('accessToken', accessToken);
+      console.log('accessToken', accessToken);
 
       // 如果成功获取到 accessToken
       if (accessToken) {

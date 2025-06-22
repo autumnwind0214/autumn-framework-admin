@@ -25,14 +25,17 @@ export namespace AuthApi {
  * 登录
  */
 export async function loginApi(data: AuthApi.LoginParams) {
+  const loginData = {
+    ...data,
+  };
   const headers: any = {
     'Content-Type': 'application/x-www-form-urlencoded',
     Authorization: `Basic ${base64Str('messaging-client:123456')}`,
   };
   return requestClient.post<AuthApi.LoginResult>(
     `${prefix}/oauth2/token`,
-    data,
-    headers,
+    new URLSearchParams(loginData).toString(),
+    { headers },
   );
 }
 
@@ -59,4 +62,11 @@ export async function logoutApi() {
  */
 export async function getAccessCodesApi() {
   return requestClient.get<string[]>('/auth/codes');
+}
+
+/**
+ * 获取RSA加密公钥
+ */
+export async function getRsaPublicKeyApi() {
+  return requestClient.get<string>(`${prefix}/publicKey`);
 }
