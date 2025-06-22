@@ -10,14 +10,20 @@ export namespace AuthApi {
     username?: string;
   }
 
+  /** 刷新令牌接口返回值 */
+  export interface RefreshTokenResult {
+    expiresAt: string;
+    issuedAt: number;
+    tokenValue: string;
+  }
+
   /** 登录接口返回值 */
   export interface LoginResult {
     accessToken: string;
-  }
-
-  export interface RefreshTokenResult {
-    data: string;
-    status: number;
+    scope: Array<string>;
+    expiresAt: Date;
+    issuedAt: Date;
+    refreshToken: RefreshTokenResult;
   }
 }
 
