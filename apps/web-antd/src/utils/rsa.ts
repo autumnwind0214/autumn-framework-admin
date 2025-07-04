@@ -22,10 +22,8 @@ export const useRSAStore = defineStore('rsa', {
 // 数据加密
 export async function encryptRSA(data: string): Promise<string> {
   let publicKeyPem = useRSAStore().publicKey;
-  console.log('publicKeyPem', publicKeyPem);
   if (publicKeyPem === '' || publicKeyPem === null) {
     await getRsaPublicKeyApi().then((res) => {
-      console.log('res', res);
       // 包装为 PEM 格式
       publicKeyPem = `-----BEGIN PUBLIC KEY-----${res}-----END PUBLIC KEY-----`;
       useRSAStore().setPublicKey(res);

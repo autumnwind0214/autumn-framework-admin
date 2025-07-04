@@ -53,9 +53,10 @@ function createRequestClient(baseURL: string, options?: RequestClientOptions) {
    */
   async function doRefreshToken() {
     const accessStore = useAccessStore();
-    const resp = await refreshTokenApi();
-    const newToken = resp.data;
+    const resp = await refreshTokenApi(accessStore.getRefreshToken());
+    const newToken = resp.accessToken;
     accessStore.setAccessToken(newToken);
+    accessStore.setRefreshToken(resp.refreshToken.tokenValue);
     return newToken;
   }
 
@@ -66,7 +67,6 @@ function createRequestClient(baseURL: string, options?: RequestClientOptions) {
   // 请求头处理
   client.addRequestInterceptor({
     fulfilled: async (config) => {
-      console.log('config:', config);
       // 获取当前请求的路径
       const { url } = config;
       config.headers['Accept-Language'] = preferences.app.locale;

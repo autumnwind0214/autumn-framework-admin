@@ -35,17 +35,17 @@ export const useAuthStore = defineStore('auth', () => {
     let userInfo: null | UserInfo = null;
     try {
       await encryptRSA(params.password).then((data) => {
-        console.log('data', data);
         params.password = data;
       });
       params.grant_type = 'password_type';
       loginLoading.value = true;
-      const { accessToken } = await loginApi(params);
-      console.log('accessToken', accessToken);
+      const result = await loginApi(params);
+      console.log('result', result);
 
       // 如果成功获取到 accessToken
-      if (accessToken) {
-        accessStore.setAccessToken(accessToken);
+      if (result) {
+        accessStore.setAccessToken(result.accessToken);
+        accessStore.setRefreshToken(result.refreshToken.tokenValue);
 
         // 获取用户信息并存储到 accessStore 中
         const [fetchUserInfoResult, accessCodes] = await Promise.all([
@@ -68,9 +68,9 @@ export const useAuthStore = defineStore('auth', () => {
               );
         }
 
-        if (userInfo?.realName) {
+        if (userInfo?.nickName) {
           notification.success({
-            description: `${$t('authentication.loginSuccessDesc')}:${userInfo?.realName}`,
+            description: `${$t('authentication.loginSuccessDesc')}:${userInfo?.nickName}`,
             duration: 3,
             message: $t('authentication.loginSuccess'),
           });

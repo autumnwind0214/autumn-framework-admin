@@ -48,10 +48,16 @@ export async function loginApi(data: AuthApi.LoginParams) {
 /**
  * 刷新accessToken
  */
-export async function refreshTokenApi() {
-  return baseRequestClient.post<AuthApi.RefreshTokenResult>('/auth/refresh', {
-    withCredentials: true,
-  });
+export async function refreshTokenApi(refreshToken: null | string) {
+  const headers: any = {
+    'Content-Type': 'application/x-www-form-urlencoded',
+    Authorization: `Basic ${base64Str('messaging-client:123456')}`,
+  };
+  return baseRequestClient.post<AuthApi.LoginResult>(
+    `${prefix}/oauth2/token`,
+    refreshToken,
+    { headers },
+  );
 }
 
 /**
@@ -67,7 +73,7 @@ export async function logoutApi() {
  * 获取用户权限码
  */
 export async function getAccessCodesApi() {
-  return requestClient.get<string[]>('/auth/codes');
+  return requestClient.get<string[]>(`${prefix}/user/codes`);
 }
 
 /**

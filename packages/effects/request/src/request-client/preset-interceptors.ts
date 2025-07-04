@@ -20,14 +20,13 @@ export const defaultResponseInterceptor = ({
 }): ResponseInterceptorConfig => {
   return {
     fulfilled: (response) => {
-      const { config, data: responseData, status } = response;
+      const { config, data: responseData } = response;
 
       if (config.responseReturn === 'raw') {
         return response;
       }
-
-      if (status >= 200 && status < 400) {
-        console.log('responseData[codeField]:', responseData[codeField]);
+      const code = responseData[codeField];
+      if (code >= 200 && code < 400) {
         if (config.responseReturn === 'body') {
           return responseData;
         } else {
