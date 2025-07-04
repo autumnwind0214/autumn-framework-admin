@@ -2,7 +2,7 @@ import type { UserInfo } from '@vben/types';
 
 import { requestClient } from '#/api/request';
 
-const prefix = '/auth-api';
+const prefix = "/auth-api";
 
 /**
  * 获取用户信息

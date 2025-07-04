@@ -64,7 +64,7 @@ export async function refreshTokenApi(refreshToken: null | string) {
  * 退出登录
  */
 export async function logoutApi() {
-  return baseRequestClient.post('/auth/logout', {
+  return baseRequestClient.post(`${prefix}/logout`, {
     withCredentials: true,
   });
 }
