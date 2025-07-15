@@ -2,11 +2,13 @@ import type { RouteRecordStringComponent } from '@vben/types';
 
 import { requestClient } from '#/api/request';
 
-const prefix = "/auth-api";
+const prefix = '/auth-api';
 
 /**
- * 获取用户所有菜单
+ * 获取动态路由
  */
-export async function getAllMenusApi() {
-  return requestClient.get<RouteRecordStringComponent[]>(`${prefix}/menu/getAsyncRoutes`);
+export async function getAsyncRoutesApi() {
+  return requestClient.get<RouteRecordStringComponent[]>(
+    `${prefix}/menu/getAsyncRoutes`,
+  );
 }
