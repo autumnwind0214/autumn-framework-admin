@@ -192,10 +192,10 @@ setupVbenVxeTable({
               icon: undefined,
               onClick: listen
                 ? () =>
-                  attrs?.onClick?.({
-                    code: opt.code,
-                    row,
-                  })
+                    attrs?.onClick?.({
+                      code: opt.code,
+                      row,
+                    })
                 : undefined,
             },
             {
