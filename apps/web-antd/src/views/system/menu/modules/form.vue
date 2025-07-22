@@ -490,7 +490,6 @@ async function onSubmit() {
       message.success($t('ui.actionMessage.operationSuccess'));
       emit('success');
     } finally {
-      message.success($t('ui.actionMessage.operationFailed'));
       drawerApi.unlock();
     }
   }
