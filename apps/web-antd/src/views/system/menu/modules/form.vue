@@ -13,6 +13,7 @@ import { $te } from '@vben/locales';
 import { getPopupContainer } from '@vben/utils';
 
 import { breakpointsTailwind, useBreakpoints } from '@vueuse/core';
+import { message } from 'ant-design-vue';
 
 import { useVbenForm, z } from '#/adapter/form';
 import {
@@ -56,7 +57,7 @@ const schema: VbenFormSchema[] = [
       .max(30, $t('ui.formRules.maxLength', [$t('system.menu.menuName'), 30]))
       .refine(
         async (value: string) => {
-          return !(await isMenuNameExists(value, formData.value?.id));
+          return await isMenuNameExists(value, formData.value?.id);
         },
         (value) => ({
           message: $t('ui.formRules.alreadyExists', [
@@ -86,7 +87,7 @@ const schema: VbenFormSchema[] = [
       valueField: 'id',
       childrenField: 'children',
     },
-    fieldName: 'pid',
+    fieldName: 'parentId',
     label: $t('system.menu.parent'),
     renderComponentContent() {
       return {
@@ -139,7 +140,7 @@ const schema: VbenFormSchema[] = [
       )
       .refine(
         async (value: string) => {
-          return !(await isMenuPathExists(value, formData.value?.id));
+          return await isMenuPathExists(value, formData.value?.id);
         },
         (value) => ({
           message: $t('ui.formRules.alreadyExists', [
@@ -233,7 +234,7 @@ const schema: VbenFormSchema[] = [
       },
       triggerFields: ['type'],
     },
-    fieldName: 'linkSrc',
+    fieldName: 'link',
     label: $t('system.menu.linkSrc'),
     rules: z.string().url($t('ui.formRules.invalidURL')),
   },
@@ -486,8 +487,10 @@ async function onSubmit() {
         ? updateMenu(formData.value.id, data)
         : createMenu(data));
       drawerApi.close();
+      message.success($t('ui.actionMessage.operationSuccess'));
       emit('success');
     } finally {
+      message.success($t('ui.actionMessage.operationFailed'));
       drawerApi.unlock();
     }
   }
