@@ -17,12 +17,12 @@ import { message } from 'ant-design-vue';
 
 import { useVbenForm, z } from '#/adapter/form';
 import {
-  createMenu,
-  getMenuList,
-  isMenuNameExists,
-  isMenuPathExists,
+  createMenuApi,
+  getMenuListApi,
+  isMenuNameExistsApi,
+  isMenuPathExistsApi,
   SystemMenuApi,
-  updateMenu,
+  updateMenuApi,
 } from '#/api/system/menu';
 import { $t } from '#/locales';
 import { componentKeys } from '#/router/routes';
@@ -57,7 +57,7 @@ const schema: VbenFormSchema[] = [
       .max(30, $t('ui.formRules.maxLength', [$t('system.menu.menuName'), 30]))
       .refine(
         async (value: string) => {
-          return await isMenuNameExists(value, formData.value?.id);
+          return await isMenuNameExistsApi(value, formData.value?.id);
         },
         (value) => ({
           message: $t('ui.formRules.alreadyExists', [
@@ -70,7 +70,7 @@ const schema: VbenFormSchema[] = [
   {
     component: 'ApiTreeSelect',
     componentProps: {
-      api: getMenuList,
+      api: getMenuListApi,
       class: 'w-full',
       filterTreeNode(input: string, node: Recordable<any>) {
         if (!input || input.length === 0) {
@@ -140,7 +140,7 @@ const schema: VbenFormSchema[] = [
       )
       .refine(
         async (value: string) => {
-          return await isMenuPathExists(value, formData.value?.id);
+          return await isMenuPathExistsApi(value, formData.value?.id);
         },
         (value) => ({
           message: $t('ui.formRules.alreadyExists', [
@@ -172,7 +172,7 @@ const schema: VbenFormSchema[] = [
         $t('ui.formRules.startWith', [$t('system.menu.path'), '/']),
       )
       .refine(async (value: string) => {
-        return await isMenuPathExists(value, formData.value?.id);
+        return await isMenuPathExistsApi(value, formData.value?.id);
       }, $t('system.menu.activePathMustExist'))
       .optional(),
   },
@@ -484,8 +484,8 @@ async function onSubmit() {
     delete data.linkSrc;
     try {
       await (formData.value?.id
-        ? updateMenu(formData.value.id, data)
-        : createMenu(data));
+        ? updateMenuApi(formData.value.id, data)
+        : createMenuApi(data));
       drawerApi.close();
       message.success($t('ui.actionMessage.operationSuccess'));
       emit('success');

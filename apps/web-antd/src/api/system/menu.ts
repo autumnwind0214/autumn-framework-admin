@@ -95,13 +95,13 @@ export namespace SystemMenuApi {
 /**
  * 获取菜单数据列表
  */
-async function getMenuList() {
+async function getMenuListApi() {
   return requestClient.get<Array<SystemMenuApi.SystemMenu>>(
     `${prefix}/menu/list`,
   );
 }
 
-async function isMenuNameExists(
+async function isMenuNameExistsApi(
   name: string,
   menuId?: SystemMenuApi.SystemMenu['id'],
 ) {
@@ -110,7 +110,7 @@ async function isMenuNameExists(
   });
 }
 
-async function isMenuPathExists(
+async function isMenuPathExistsApi(
   path: string,
   menuId?: SystemMenuApi.SystemMenu['id'],
 ) {
@@ -123,7 +123,7 @@ async function isMenuPathExists(
  * 创建菜单
  * @param data 菜单数据
  */
-async function createMenu(
+async function createMenuApi(
   data: Omit<SystemMenuApi.SystemMenu, 'children' | 'id'>,
 ) {
   return requestClient.post(`${prefix}/menu`, data);
@@ -135,7 +135,7 @@ async function createMenu(
  * @param id 菜单 ID
  * @param data 菜单数据
  */
-async function updateMenu(
+async function updateMenuApi(
   id: number,
   data: Omit<SystemMenuApi.SystemMenu, 'children' | 'id'>,
 ) {
@@ -147,15 +147,15 @@ async function updateMenu(
  * 删除菜单
  * @param id 菜单 ID
  */
-async function deleteMenu(id: number) {
+async function deleteMenuApi(id: number) {
   return requestClient.delete(`${prefix}/menu/${id}`);
 }
 
 export {
-  createMenu,
-  deleteMenu,
-  getMenuList,
-  isMenuNameExists,
-  isMenuPathExists,
-  updateMenu,
+  createMenuApi,
+  deleteMenuApi,
+  getMenuListApi,
+  isMenuNameExistsApi,
+  isMenuPathExistsApi,
+  updateMenuApi,
 };

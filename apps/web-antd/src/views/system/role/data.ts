@@ -8,7 +8,7 @@ export function useFormSchema(): VbenFormSchema[] {
   return [
     {
       component: 'Input',
-      fieldName: 'name',
+      fieldName: 'roleName',
       label: $t('system.role.roleName'),
       rules: 'required',
     },
@@ -33,7 +33,7 @@ export function useFormSchema(): VbenFormSchema[] {
     },
     {
       component: 'Input',
-      fieldName: 'permissions',
+      fieldName: 'permission',
       formItemClass: 'items-start',
       label: $t('system.role.setPermissions'),
       modelPropName: 'modelValue',
@@ -45,10 +45,9 @@ export function useGridFormSchema(): VbenFormSchema[] {
   return [
     {
       component: 'Input',
-      fieldName: 'name',
+      fieldName: 'roleName',
       label: $t('system.role.roleName'),
     },
-    { component: 'Input', fieldName: 'id', label: $t('system.role.id') },
     {
       component: 'Select',
       componentProps: {
@@ -61,16 +60,6 @@ export function useGridFormSchema(): VbenFormSchema[] {
       fieldName: 'status',
       label: $t('system.role.status'),
     },
-    {
-      component: 'Input',
-      fieldName: 'remark',
-      label: $t('system.role.remark'),
-    },
-    {
-      component: 'RangePicker',
-      fieldName: 'createTime',
-      label: $t('system.role.createTime'),
-    },
   ];
 }
 
@@ -80,23 +69,9 @@ export function useColumns<T = SystemRoleApi.SystemRole>(
 ): VxeTableGridOptions['columns'] {
   return [
     {
-      field: 'name',
+      field: 'roleName',
       title: $t('system.role.roleName'),
       width: 200,
-    },
-    {
-      field: 'id',
-      title: $t('system.role.id'),
-      width: 200,
-    },
-    {
-      cellRender: {
-        attrs: { beforeChange: onStatusChange },
-        name: onStatusChange ? 'CellSwitch' : 'CellTag',
-      },
-      field: 'status',
-      title: $t('system.role.status'),
-      width: 100,
     },
     {
       field: 'remark',
@@ -107,6 +82,15 @@ export function useColumns<T = SystemRoleApi.SystemRole>(
       field: 'createTime',
       title: $t('system.role.createTime'),
       width: 200,
+    },
+    {
+      cellRender: {
+        attrs: { beforeChange: onStatusChange },
+        name: onStatusChange ? 'CellSwitch' : 'CellTag',
+      },
+      field: 'status',
+      title: $t('system.role.status'),
+      width: 100,
     },
     {
       align: 'center',

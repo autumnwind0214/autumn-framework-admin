@@ -1,23 +1,19 @@
 <script lang="ts" setup>
-import type { Recordable } from '@vben/types';
+import type { Recordable } from "@vben/types";
 
-import type {
-  OnActionClickParams,
-  VxeTableGridOptions,
-} from '#/adapter/vxe-table';
-import type { SystemRoleApi } from '#/api';
+import type { OnActionClickParams, VxeTableGridOptions } from "#/adapter/vxe-table";
+import { useVbenVxeGrid } from "#/adapter/vxe-table";
+import type { SystemRoleApi } from "#/api";
+import { deleteRoleApi, getRoleListApi, updateRoleApi } from "#/api";
 
-import { Page, useVbenDrawer } from '@vben/common-ui';
-import { Plus } from '@vben/icons';
+import { Page, useVbenDrawer } from "@vben/common-ui";
+import { Plus } from "@vben/icons";
 
-import { Button, message, Modal } from 'ant-design-vue';
+import { Button, message, Modal } from "ant-design-vue";
+import { $t } from "#/locales";
 
-import { useVbenVxeGrid } from '#/adapter/vxe-table';
-import { deleteRole, getRoleList, updateRole } from '#/api';
-import { $t } from '#/locales';
-
-import { useColumns, useGridFormSchema } from './data';
-import Form from './modules/form.vue';
+import { useColumns, useGridFormSchema } from "./data";
+import Form from "./modules/form.vue";
 
 const [FormDrawer, formDrawerApi] = useVbenDrawer({
   connectedComponent: Form,
@@ -37,9 +33,9 @@ const [Grid, gridApi] = useVbenVxeGrid({
     proxyConfig: {
       ajax: {
         query: async ({ page }, formValues) => {
-          return await getRoleList({
+          return await getRoleListApi({
             page: page.currentPage,
-            pageSize: page.pageSize,
+            size: page.pageSize,
             ...formValues,
           });
         },
@@ -108,10 +104,10 @@ async function onStatusChange(
   };
   try {
     await confirm(
-      `你要将${row.name}的状态切换为 【${status[newStatus.toString()]}】 吗？`,
+      `你要将${row.roleName}的状态切换为 【${status[newStatus.toString()]}】 吗？`,
       `切换状态`,
     );
-    await updateRole(row.id, { status: newStatus });
+    await updateRoleApi(row.id, { status: newStatus });
     return true;
   } catch {
     return false;
@@ -128,7 +124,7 @@ function onDelete(row: SystemRoleApi.SystemRole) {
     duration: 0,
     key: 'action_process_msg',
   });
-  deleteRole(row.id)
+  deleteRoleApi(row.id)
     .then(() => {
       message.success({
         content: $t('ui.actionMessage.deleteSuccess', [row.name]),
