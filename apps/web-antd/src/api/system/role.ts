@@ -11,7 +11,7 @@ export namespace SystemRoleApi {
     [key: string]: any;
     id: number;
     roleName: string;
-    permission: string;
+    role: string;
     remark?: string;
     status: 0 | 1;
   }
@@ -45,7 +45,15 @@ async function updateRoleApi(
   id: number,
   data: Omit<SystemRoleApi.SystemRole, 'id'>,
 ) {
-  return requestClient.put(`/system/role/${id}`, data);
+  data.id = id;
+  return requestClient.put(`${prefix}/role`, data);
+}
+
+/**
+ * 更新角色状态
+ */
+async function updateRoleStatusApi(id: number, status: 0 | 1) {
+  return requestClient.put(`${prefix}/role/status/${id}/${status}`);
 }
 
 /**
@@ -56,4 +64,10 @@ async function deleteRoleApi(id: number) {
   return requestClient.delete(`/system/role/${id}`);
 }
 
-export { createRoleApi, deleteRoleApi, getRoleListApi, updateRoleApi };
+export {
+  createRoleApi,
+  deleteRoleApi,
+  getRoleListApi,
+  updateRoleApi,
+  updateRoleStatusApi,
+};

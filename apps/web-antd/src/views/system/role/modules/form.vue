@@ -90,7 +90,6 @@ function getNodeClass(node: Recordable<any>) {
       classes.push('!pl-0');
     }
   }
-
   return classes.join(' ');
 }
 </script>

@@ -13,7 +13,7 @@ import { Plus } from '@vben/icons';
 import { Button, message, Modal } from 'ant-design-vue';
 
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
-import { deleteRoleApi, getRoleListApi, updateRoleApi } from '#/api';
+import { deleteRoleApi, getRoleListApi, updateRoleStatusApi } from '#/api';
 import { $t } from '#/locales';
 
 import { useColumns, useGridFormSchema } from './data';
@@ -98,10 +98,7 @@ function confirm(content: string, title: string) {
  * @param row 行数据
  * @returns 返回false则中止改变，返回其他值（undefined、true）则允许改变
  */
-async function onStatusChange(
-  newStatus: number,
-  row: SystemRoleApi.SystemRole,
-) {
+async function onStatusChange(newStatus: 0 | 1, row: SystemRoleApi.SystemRole) {
   const status: Recordable<string> = {
     0: '禁用',
     1: '启用',
@@ -111,7 +108,7 @@ async function onStatusChange(
       `你要将${row.roleName}的状态切换为 【${status[newStatus.toString()]}】 吗？`,
       `切换状态`,
     );
-    await updateRoleApi(row.id, { status: newStatus });
+    await updateRoleStatusApi(row.id, newStatus);
     return true;
   } catch {
     return false;

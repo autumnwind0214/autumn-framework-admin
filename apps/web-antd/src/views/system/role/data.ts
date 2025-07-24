@@ -69,6 +69,11 @@ export function useColumns<T = SystemRoleApi.SystemRole>(
 ): VxeTableGridOptions['columns'] {
   return [
     {
+      field: 'role',
+      title: $t('system.role.role'),
+      width: 200,
+    },
+    {
       field: 'roleName',
       title: $t('system.role.roleName'),
       width: 200,
