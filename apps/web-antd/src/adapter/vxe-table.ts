@@ -166,10 +166,10 @@ setupVbenVxeTable({
               return presets[opt]
                 ? { code: opt, ...presets[opt], ...defaultProps }
                 : {
-                  code: opt,
-                  text: $te(`common.${opt}`) ? $t(`common.${opt}`) : opt,
-                  ...defaultProps,
-                };
+                    code: opt,
+                    text: $te(`common.${opt}`) ? $t(`common.${opt}`) : opt,
+                    ...defaultProps,
+                  };
             } else {
               return { ...defaultProps, ...presets[opt.code], ...opt };
             }

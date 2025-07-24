@@ -13,7 +13,11 @@ import { MenuBadge } from '@vben-core/menu-ui';
 import { Button, message } from 'ant-design-vue';
 
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
-import { deleteMenuApi, getMenuListApi, SystemMenuApi } from '#/api/system/menu';
+import {
+  deleteMenuApi,
+  getMenuListApi,
+  SystemMenuApi,
+} from '#/api/system/menu';
 
 import { useColumns } from './data';
 import Form from './modules/form.vue';
