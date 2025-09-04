@@ -10,7 +10,7 @@ import { computed, ref } from 'vue';
 import { useVbenDrawer, VbenTree } from '@vben/common-ui';
 import { IconifyIcon } from '@vben/icons';
 
-import { Spin } from 'ant-design-vue';
+import { message, Spin } from 'ant-design-vue';
 
 import { useVbenForm } from '#/adapter/form';
 import { getMenuListApi } from '#/api/system/menu';
@@ -40,6 +40,7 @@ const [Drawer, drawerApi] = useVbenDrawer({
     drawerApi.lock();
     (id.value ? updateRoleApi(id.value, values) : createRoleApi(values))
       .then(() => {
+        message.success($t('ui.actionMessage.operationSuccess'));
         emits('success');
         drawerApi.close();
       })
