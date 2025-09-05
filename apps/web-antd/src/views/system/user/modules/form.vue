@@ -1,139 +1,93 @@
 <script lang="ts" setup>
-import type { DataNode } from 'ant-design-vue/es/tree';
-
-import type { Recordable } from '@vben/types';
-
-import type { SystemRoleApi } from '#/api/system/role';
-
 import { computed, ref } from 'vue';
 
-import { useVbenDrawer, VbenTree } from '@vben/common-ui';
-import { IconifyIcon } from '@vben/icons';
+import { useVbenDrawer } from '@vben/common-ui';
 
-import { Spin } from 'ant-design-vue';
+import { breakpointsTailwind, useBreakpoints } from '@vueuse/core';
+import { message } from 'ant-design-vue';
 
 import { useVbenForm } from '#/adapter/form';
-import { getMenuListApi } from '#/api/system/menu';
-import { createRole, updateRole } from '#/api/system/role';
+import { createMenuApi, SystemMenuApi, updateMenuApi } from '#/api/system/menu';
 import { $t } from '#/locales';
+import { useFormSchema } from '#/views/system/user/data';
 
-import { useFormSchema } from '../data';
+const emit = defineEmits<{
+  success: [];
+}>();
+const formData = ref<SystemMenuApi.SystemMenu>();
+const titleSuffix = ref<string>();
 
-const emits = defineEmits(['success']);
-
-const formData = ref<SystemRoleApi.SystemRole>();
+const breakpoints = useBreakpoints(breakpointsTailwind);
+const isHorizontal = computed(() => breakpoints.greaterOrEqual('md').value);
 
 const [Form, formApi] = useVbenForm({
+  commonConfig: {
+    colon: true,
+    formItemClass: 'col-span-2 md:col-span-1',
+  },
   schema: useFormSchema(),
   showDefaultActions: false,
+  wrapperClass: 'grid-cols-2 gap-x-4',
 });
 
-const permissions = ref<DataNode[]>([]);
-const loadingPermissions = ref(false);
-
-const id = ref();
 const [Drawer, drawerApi] = useVbenDrawer({
-  async onConfirm() {
-    const { valid } = await formApi.validate();
-    if (!valid) return;
-    const values = await formApi.getValues();
-    drawerApi.lock();
-    (id.value ? updateRole(id.value, values) : createRole(values))
-      .then(() => {
-        emits('success');
-        drawerApi.close();
-      })
-      .catch(() => {
-        drawerApi.unlock();
-      });
-  },
+  onConfirm: onSubmit,
   onOpenChange(isOpen) {
     if (isOpen) {
-      const data = drawerApi.getData<SystemRoleApi.SystemRole>();
-      formApi.resetForm();
+      const data = drawerApi.getData<SystemMenuApi.SystemMenu>();
+      if (data?.type === 'link') {
+        data.linkSrc = data.meta?.link;
+      } else if (data?.type === 'embedded') {
+        data.linkSrc = data.meta?.iframeSrc;
+      }
       if (data) {
         formData.value = data;
-        id.value = data.id;
-        formApi.setValues(data);
+        formApi.setValues(formData.value);
+        titleSuffix.value = formData.value.meta?.title
+          ? $t(formData.value.meta.title)
+          : '';
       } else {
-        id.value = undefined;
-      }
-
-      if (permissions.value.length === 0) {
-        loadPermissions();
+        formApi.resetForm();
+        titleSuffix.value = '';
       }
     }
   },
 });
 
-async function loadPermissions() {
-  loadingPermissions.value = true;
-  try {
-    const res = await getMenuListApi();
-    permissions.value = res as unknown as DataNode[];
-  } finally {
-    loadingPermissions.value = false;
-  }
-}
-
-const getDrawerTitle = computed(() => {
-  return formData.value?.id
-    ? $t('common.edit', $t('system.role.name'))
-    : $t('common.create', $t('system.role.name'));
-});
-
-function getNodeClass(node: Recordable<any>) {
-  const classes: string[] = [];
-  if (node.value?.type === 'button') {
-    classes.push('inline-flex');
-    if (node.index % 3 >= 1) {
-      classes.push('!pl-0');
+async function onSubmit() {
+  const { valid } = await formApi.validate();
+  if (valid) {
+    drawerApi.lock();
+    const data =
+      await formApi.getValues<
+        Omit<SystemMenuApi.SystemMenu, 'children' | 'id'>
+      >();
+    if (data.type === 'link') {
+      data.meta = { ...data.meta, link: data.linkSrc };
+    } else if (data.type === 'embedded') {
+      data.meta = { ...data.meta, iframeSrc: data.linkSrc };
+    }
+    delete data.linkSrc;
+    try {
+      await (formData.value?.id
+        ? updateMenuApi(formData.value.id, data)
+        : createMenuApi(data));
+      drawerApi.close();
+      message.success($t('ui.actionMessage.operationSuccess'));
+      emit('success');
+    } finally {
+      drawerApi.unlock();
     }
   }
-
-  return classes.join(' ');
 }
+const getDrawerTitle = computed(() =>
+  formData.value?.id
+    ? $t('ui.actionTitle.edit', [$t('system.menu.name')])
+    : $t('ui.actionTitle.create', [$t('system.menu.name')]),
+);
 </script>
 <template>
-  <Drawer :title="getDrawerTitle">
-    <Form>
-      <template #permissions="slotProps">
-        <Spin :spinning="loadingPermissions" wrapper-class-name="w-full">
-          <VbenTree
-            :tree-data="permissions"
-            multiple
-            bordered
-            :default-expanded-level="2"
-            :get-node-class="getNodeClass"
-            v-bind="slotProps"
-            value-field="id"
-            label-field="meta.title"
-            icon-field="meta.icon"
-          >
-            <template #node="{ value }">
-              <IconifyIcon v-if="value.meta.icon" :icon="value.meta.icon" />
-              {{ $t(value.meta.title) }}
-            </template>
-          </VbenTree>
-        </Spin>
-      </template>
-    </Form>
+  <Drawer class="w-full max-w-[800px]" :title="getDrawerTitle">
+    <Form class="mx-4" :layout="isHorizontal ? 'horizontal' : 'vertical'" />
   </Drawer>
 </template>
-<style lang="css" scoped>
-:deep(.ant-tree-title) {
-  .tree-actions {
-    display: none;
-    margin-left: 20px;
-  }
-}
-
-:deep(.ant-tree-title:hover) {
-  .tree-actions {
-    display: flex;
-    flex: auto;
-    justify-content: flex-end;
-    margin-left: 20px;
-  }
-}
-</style>

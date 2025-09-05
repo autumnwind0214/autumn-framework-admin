@@ -1,6 +1,6 @@
 import type { VbenFormSchema } from '#/adapter/form';
 import type { OnActionClickFn, VxeTableGridOptions } from '#/adapter/vxe-table';
-import type { SystemRoleApi } from '#/api';
+import type { SystemUserApi } from '#/api';
 
 import { $t } from '#/locales';
 
@@ -8,7 +8,13 @@ export function useFormSchema(): VbenFormSchema[] {
   return [
     {
       component: 'Input',
-      fieldName: 'name',
+      fieldName: 'role',
+      label: $t('system.role.name'),
+      rules: 'required',
+    },
+    {
+      component: 'Input',
+      fieldName: 'roleName',
       label: $t('system.role.roleName'),
       rules: 'required',
     },
@@ -45,58 +51,25 @@ export function useGridFormSchema(): VbenFormSchema[] {
   return [
     {
       component: 'Input',
-      fieldName: 'name',
-      label: $t('system.role.roleName'),
-    },
-    { component: 'Input', fieldName: 'id', label: $t('system.role.id') },
-    {
-      component: 'Select',
-      componentProps: {
-        allowClear: true,
-        options: [
-          { label: $t('common.enabled'), value: 1 },
-          { label: $t('common.disabled'), value: 0 },
-        ],
-      },
-      fieldName: 'status',
-      label: $t('system.role.status'),
-    },
-    {
-      component: 'Input',
-      fieldName: 'remark',
-      label: $t('system.role.remark'),
-    },
-    {
-      component: 'RangePicker',
-      fieldName: 'createTime',
-      label: $t('system.role.createTime'),
+      fieldName: 'username',
+      label: $t('system.user.username'),
     },
   ];
 }
 
-export function useColumns<T = SystemRoleApi.SystemRole>(
+export function useColumns<T = SystemUserApi.SystemUser>(
   onActionClick: OnActionClickFn<T>,
-  onStatusChange?: (newStatus: any, row: T) => PromiseLike<boolean | undefined>,
 ): VxeTableGridOptions['columns'] {
   return [
     {
-      field: 'name',
+      field: 'username',
+      title: $t('system.user.username'),
+      width: 200,
+    },
+    {
+      field: 'roleName',
       title: $t('system.role.roleName'),
       width: 200,
-    },
-    {
-      field: 'id',
-      title: $t('system.role.id'),
-      width: 200,
-    },
-    {
-      cellRender: {
-        attrs: { beforeChange: onStatusChange },
-        name: onStatusChange ? 'CellSwitch' : 'CellTag',
-      },
-      field: 'status',
-      title: $t('system.role.status'),
-      width: 100,
     },
     {
       field: 'remark',
