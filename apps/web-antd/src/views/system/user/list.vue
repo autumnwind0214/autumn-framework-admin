@@ -7,6 +7,8 @@ import type { SystemUserApi } from '#/api';
 import { Page, useVbenDrawer } from '@vben/common-ui';
 import { Plus } from '@vben/icons';
 
+import { VbenAvatar } from '@vben-core/shadcn-ui';
+
 import { Button, message } from 'ant-design-vue';
 
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
@@ -121,6 +123,11 @@ function onCreate() {
   <Page auto-content-height>
     <FormDrawer />
     <Grid :table-title="$t('system.user.list')">
+      <template #image-url="{ row }">
+        <div class="flex items-center justify-center">
+          <VbenAvatar :src="row.avatar" class="size-8 flex-shrink-0" />
+        </div>
+      </template>
       <template #toolbar-tools>
         <Button type="primary" @click="onCreate">
           <Plus class="size-5" />
