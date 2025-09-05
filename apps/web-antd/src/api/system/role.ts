@@ -29,11 +29,18 @@ async function getRoleListApi(data: Recordable<any>) {
 }
 
 /**
+ * 获取角色详情
+ */
+async function getRoleDetailApi(id: number) {
+  return requestClient.get<SystemRoleApi.SystemRole>(`${prefix}/role/${id}`);
+}
+
+/**
  * 创建角色
  * @param data 角色数据
  */
 async function createRoleApi(data: Omit<SystemRoleApi.SystemRole, 'id'>) {
-  return requestClient.post('/system/role', data);
+  return requestClient.post(`${prefix}/role`, data);
 }
 
 /**
@@ -68,6 +75,7 @@ async function deleteRoleApi(id: number) {
 export {
   createRoleApi,
   deleteRoleApi,
+  getRoleDetailApi,
   getRoleListApi,
   updateRoleApi,
   updateRoleStatusApi,

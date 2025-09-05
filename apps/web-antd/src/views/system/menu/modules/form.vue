@@ -272,6 +272,7 @@ const schema: VbenFormSchema[] = [
       allowClear: true,
       class: 'w-full',
       options: [
+        { label: $t('system.menu.badgeType.none'), value: 'none' },
         { label: $t('system.menu.badgeType.dot'), value: 'dot' },
         { label: $t('system.menu.badgeType.normal'), value: 'normal' },
       ],

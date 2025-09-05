@@ -3,7 +3,7 @@ import type { DataNode } from 'ant-design-vue/es/tree';
 
 import type { Recordable } from '@vben/types';
 
-import type { SystemRoleApi } from '#/api/system/role';
+import { getRoleDetailApi, type SystemRoleApi } from "#/api/system/role";
 
 import { computed, ref } from 'vue';
 
@@ -48,13 +48,14 @@ const [Drawer, drawerApi] = useVbenDrawer({
         drawerApi.unlock();
       });
   },
-  onOpenChange(isOpen) {
+  async onOpenChange(isOpen) {
     if (isOpen) {
-      const data = drawerApi.getData<SystemRoleApi.SystemRole>();
+      let data = drawerApi.getData<SystemRoleApi.SystemRole>();
       formApi.resetForm();
       if (data) {
-        formData.value = data;
         id.value = data.id;
+        data = await getRoleDetailApi(data.id);
+        formData.value = data;
         formApi.setValues(data);
       } else {
         id.value = undefined;
