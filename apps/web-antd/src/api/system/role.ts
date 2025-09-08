@@ -36,6 +36,13 @@ async function getRoleDetailApi(id: number) {
 }
 
 /**
+ * 获取所有角色
+ */
+async function getAllRoleApi() {
+  return requestClient.get<SystemRoleApi.SystemRole[]>(`${prefix}/role/all`);
+}
+
+/**
  * 创建角色
  * @param data 角色数据
  */
@@ -75,6 +82,7 @@ async function deleteRoleApi(id: number) {
 export {
   createRoleApi,
   deleteRoleApi,
+  getAllRoleApi,
   getRoleDetailApi,
   getRoleListApi,
   updateRoleApi,

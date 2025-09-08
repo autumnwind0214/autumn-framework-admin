@@ -77,6 +77,8 @@
     "birthday": "生日",
     "loginTime": "最后登录时间",
     "createTime": "创建时间",
+    "disabled": "禁用状态",
+    "locked": "锁定状态",
     "remark": "备注",
     "operation": "操作",
     "role": "角色"

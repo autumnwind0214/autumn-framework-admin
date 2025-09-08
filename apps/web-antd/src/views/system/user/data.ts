@@ -54,11 +54,27 @@ export function useGridFormSchema(): VbenFormSchema[] {
       fieldName: 'username',
       label: $t('system.user.username'),
     },
+    {
+      component: 'Select',
+      componentProps: {
+        allowClear: true,
+        options: [
+          { label: $t('common.enabled'), value: 1 },
+          { label: $t('common.disabled'), value: 0 },
+        ],
+      },
+      fieldName: 'disabled',
+      label: $t('system.user.disabled'),
+    },
   ];
 }
 
 export function useColumns<T = SystemUserApi.SystemUser>(
   onActionClick: OnActionClickFn<T>,
+  onDisabledChange?: (
+    newDisabled: any,
+    row: T,
+  ) => PromiseLike<boolean | undefined>,
 ): VxeTableGridOptions['columns'] {
   return [
     {
@@ -106,6 +122,15 @@ export function useColumns<T = SystemUserApi.SystemUser>(
       },
     },
     {
+      cellRender: {
+        attrs: { beforeChange: onDisabledChange },
+        name: onDisabledChange ? 'CellSwitch' : 'CellTag',
+      },
+      field: 'disabled',
+      title: $t('system.user.disabled'),
+      width: 100,
+    },
+    {
       field: 'remark',
       title: $t('system.user.remark'),
       minWidth: 200,
@@ -119,11 +144,22 @@ export function useColumns<T = SystemUserApi.SystemUser>(
           onClick: onActionClick,
         },
         name: 'CellOperation',
+        options: [
+          'edit', // 预设的编辑按钮
+          'delete', // 预设的删除按钮
+          {
+            code: 'unlock',
+            text: $t('common.unlock'),
+            show: (row: any) => {
+              return row.locked === 0;
+            },
+          },
+        ],
       },
       field: 'operation',
       fixed: 'right',
       title: $t('system.user.operation'),
-      width: 130,
+      width: 200,
     },
   ];
 }

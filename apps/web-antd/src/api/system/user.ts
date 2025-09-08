@@ -4,7 +4,7 @@ import type { ResultTable } from '#/api/result';
 
 import { requestClient } from '#/api/request';
 
-const prefix = '/auth-api';
+const prefix = '/auth-api/user';
 
 export namespace SystemUserApi {
   export interface SystemUser {
@@ -18,7 +18,30 @@ export namespace SystemUserApi {
     avatar: string;
     sex: 0 | 1;
     loginTime: string;
+    locked: 0 | 1;
+    disabled: 0 | 1;
   }
+}
+
+/**
+ * 创建用户
+ */
+async function createUserApi(data: SystemUserApi.SystemUser) {
+  return requestClient.post<SystemUserApi.SystemUser>(`${prefix}`, data);
+}
+
+/**
+ * 更新用户
+ */
+async function updateUserApi(data: SystemUserApi.SystemUser) {
+  return requestClient.put<SystemUserApi.SystemUser>(`${prefix}`, data);
+}
+
+/**
+ * 获取用户详情
+ */
+async function getUserDetailApi(id: number) {
+  return requestClient.get<SystemUserApi.SystemUser>(`${prefix}/${id}`);
 }
 
 /**
@@ -26,9 +49,16 @@ export namespace SystemUserApi {
  */
 async function getUserListApi(data: Recordable<any>) {
   return requestClient.post<ResultTable<SystemUserApi.SystemUser>>(
-    `${prefix}/user/listPage`,
+    `${prefix}/listPage`,
     data,
   );
+}
+
+async function updateUserDisabledApi(id: number, disabled: 0 | 1) {
+  return requestClient.put(`${prefix}/disabled/${id}/${disabled}`);
+}
+async function updateUserUnLockedApi(id: number) {
+  return requestClient.put(`${prefix}/unlock/${id}`);
 }
 
 /**
@@ -36,7 +66,15 @@ async function getUserListApi(data: Recordable<any>) {
  * @param id 角色 ID
  */
 async function deleteUserApi(id: number) {
-  return requestClient.delete(`${prefix}/user/${id}`);
+  return requestClient.delete(`${prefix}/${id}`);
 }
 
-export { deleteUserApi, getUserListApi };
+export {
+  createUserApi,
+  deleteUserApi,
+  getUserDetailApi,
+  getUserListApi,
+  updateUserApi,
+  updateUserDisabledApi,
+  updateUserUnLockedApi,
+};
