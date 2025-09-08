@@ -3,7 +3,7 @@ import type { VxeTableGridOptions } from '@vben/plugins/vxe-table';
 import type { Recordable } from '@vben/types';
 
 import type { OnActionClickParams } from '#/adapter/vxe-table';
-import type { SystemRoleApi, SystemUserApi } from "#/api";
+import type { SystemUserApi } from '#/api';
 
 import { Page, useVbenDrawer } from '@vben/common-ui';
 import { Plus } from '@vben/icons';
