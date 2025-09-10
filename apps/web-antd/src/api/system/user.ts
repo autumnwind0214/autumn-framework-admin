@@ -26,14 +26,18 @@ export namespace SystemUserApi {
 /**
  * 创建用户
  */
-async function createUserApi(data: SystemUserApi.SystemUser) {
+async function createUserApi(data: Omit<SystemUserApi.SystemUser, 'id'>) {
   return requestClient.post<SystemUserApi.SystemUser>(`${prefix}`, data);
 }
 
 /**
  * 更新用户
  */
-async function updateUserApi(data: SystemUserApi.SystemUser) {
+async function updateUserApi(
+  id: number,
+  data: Omit<SystemUserApi.SystemUser, 'id'>,
+) {
+  data.id = id;
   return requestClient.put<SystemUserApi.SystemUser>(`${prefix}`, data);
 }
 

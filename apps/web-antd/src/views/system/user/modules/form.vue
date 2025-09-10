@@ -57,7 +57,7 @@ const [Drawer, drawerApi] = useVbenDrawer({
     if (isOpen) {
       let data = drawerApi.getData<SystemUserApi.SystemUser>();
       formApi.resetForm();
-      if (data) {
+      if (data && Object.keys(data).length > 0) {
         id.value = data.id;
         data = await getUserDetailApi(data.id);
         formData.value = data;

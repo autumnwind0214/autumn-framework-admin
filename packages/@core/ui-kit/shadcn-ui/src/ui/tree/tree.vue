@@ -100,7 +100,6 @@ onMounted(() => {
 
 function getItemByValue(value: number | string) {
   return flattenData.value.find((item) => {
-    // return get(item.value, props.valueField) === value;
     const nodeValue = get(item.value, props.valueField);
     return String(nodeValue) === String(value);
   })?.value;
@@ -114,8 +113,6 @@ function updateTreeValue() {
     if (Array.isArray(val)) {
       const filteredValues = val.filter((v) => {
         const item = getItemByValue(v);
-        console.log('item', item);
-        console.log('v', v);
         return item && !get(item, props.disabledField);
       });
       treeValue.value = filteredValues.map((v) => getItemByValue(v));

@@ -32,7 +32,7 @@ export namespace AuthApi {
       code: number;
       data: LoginResult;
       message: string;
-    }
+    };
   }
 }
 

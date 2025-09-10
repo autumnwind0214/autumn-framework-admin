@@ -455,7 +455,7 @@ const [Drawer, drawerApi] = useVbenDrawer({
       } else if (data?.type === 'embedded') {
         data.linkSrc = data.meta?.iframeSrc;
       }
-      if (data) {
+      if (data && Object.keys(data).length > 0) {
         formData.value = data;
         formApi.setValues(formData.value);
         titleSuffix.value = formData.value.meta?.title
