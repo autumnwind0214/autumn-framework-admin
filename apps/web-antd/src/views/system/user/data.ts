@@ -8,40 +8,21 @@ export function useFormSchema(): VbenFormSchema[] {
   return [
     {
       component: 'Input',
-      fieldName: 'role',
-      label: $t('system.role.name'),
+      fieldName: 'username',
+      label: $t('system.user.username'),
       rules: 'required',
     },
     {
       component: 'Input',
-      fieldName: 'roleName',
-      label: $t('system.role.roleName'),
+      fieldName: 'nickname',
+      label: $t('system.user.nickname'),
       rules: 'required',
     },
     {
-      component: 'RadioGroup',
-      componentProps: {
-        buttonStyle: 'solid',
-        options: [
-          { label: $t('common.enabled'), value: 1 },
-          { label: $t('common.disabled'), value: 0 },
-        ],
-        optionType: 'button',
-      },
-      defaultValue: 1,
-      fieldName: 'status',
-      label: $t('system.role.status'),
-    },
-    {
-      component: 'Textarea',
-      fieldName: 'remark',
-      label: $t('system.role.remark'),
-    },
-    {
       component: 'Input',
-      fieldName: 'permissions',
+      fieldName: 'roleIds',
       formItemClass: 'items-start',
-      label: $t('system.role.setPermissions'),
+      label: $t('system.user.role'),
       modelPropName: 'modelValue',
     },
   ];

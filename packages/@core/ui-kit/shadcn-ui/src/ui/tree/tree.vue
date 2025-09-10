@@ -100,6 +100,7 @@ onMounted(() => {
 
 function getItemByValue(value: number | string) {
   return flattenData.value.find((item) => {
+    console.log('item', item);
     const nodeValue = get(item.value, props.valueField);
     return String(nodeValue) === String(value);
   })?.value;
@@ -107,6 +108,7 @@ function getItemByValue(value: number | string) {
 
 function updateTreeValue() {
   const val = modelValue.value;
+  console.log('val', val);
   if (val === undefined) {
     treeValue.value = undefined;
   } else {

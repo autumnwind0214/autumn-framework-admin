@@ -5,7 +5,7 @@ import type { SystemUserApi } from '#/api/system/user';
 
 import { computed, ref } from 'vue';
 
-import { useVbenDrawer } from '@vben/common-ui';
+import { useVbenDrawer, VbenTree } from '@vben/common-ui';
 
 import { breakpointsTailwind, useBreakpoints } from '@vueuse/core';
 import { message } from 'ant-design-vue';
@@ -33,8 +33,8 @@ const [Form, formApi] = useVbenForm({
   showDefaultActions: false,
 });
 
-const permissions = ref<DataNode[]>([]);
-const loadingPermissions = ref(false);
+const roles = ref<DataNode[]>([]);
+const loadingRoles = ref(false);
 
 const id = ref();
 const [Drawer, drawerApi] = useVbenDrawer({
@@ -64,22 +64,23 @@ const [Drawer, drawerApi] = useVbenDrawer({
         formApi.setValues(data);
       } else {
         id.value = undefined;
+        formApi.resetForm();
       }
 
-      if (permissions.value.length === 0) {
-        loadPermissions();
+      if (roles.value.length === 0) {
+        loadRoles();
       }
     }
   },
 });
 
-async function loadPermissions() {
-  loadingPermissions.value = true;
+async function loadRoles() {
+  loadingRoles.value = true;
   try {
     const res = await getAllRoleApi();
-    permissions.value = res as unknown as DataNode[];
+    roles.value = res as unknown as DataNode[];
   } finally {
-    loadingPermissions.value = false;
+    loadingRoles.value = false;
   }
 }
 
@@ -91,6 +92,24 @@ const getDrawerTitle = computed(() => {
 </script>
 <template>
   <Drawer class="w-full max-w-[800px]" :title="getDrawerTitle">
-    <Form class="mx-4" :layout="isHorizontal ? 'horizontal' : 'vertical'" />
+    <Form class="mx-4" :layout="isHorizontal ? 'horizontal' : 'vertical'">
+      <template #roleIds="slotProps">
+        <Spin :spinning="loadingRoles" wrapper-class-name="w-full">
+          <VbenTree
+            :tree-data="roles"
+            multiple
+            bordered
+            :default-expanded-level="2"
+            v-bind="slotProps"
+            value-field="id"
+            label-field="roleIds"
+          >
+            <template #node="{ value }">
+              {{ $t(value.roleName) }}
+            </template>
+          </VbenTree>
+        </Spin>
+      </template>
+    </Form>
   </Drawer>
 </template>
