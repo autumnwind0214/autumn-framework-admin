@@ -20,6 +20,7 @@ import {
 import { $t } from '#/locales';
 
 import { useFormSchema } from '../data';
+import type { Recordable } from "@vben-core/typings";
 
 const emits = defineEmits(['success']);
 
@@ -89,6 +90,11 @@ const getDrawerTitle = computed(() => {
     ? $t('common.edit', $t('system.role.name'))
     : $t('common.create', $t('system.role.name'));
 });
+function getNodeClass() {
+  const classes: string[] = [];
+  classes.push('inline-flex', '!pl-0');
+  return classes.join(' ');
+}
 </script>
 <template>
   <Drawer class="w-full max-w-[800px]" :title="getDrawerTitle">
@@ -100,6 +106,7 @@ const getDrawerTitle = computed(() => {
             multiple
             bordered
             :default-expanded-level="2"
+            :get-node-class="getNodeClass"
             v-bind="slotProps"
             value-field="id"
             label-field="roleIds"
