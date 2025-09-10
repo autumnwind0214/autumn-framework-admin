@@ -25,6 +25,15 @@ export namespace AuthApi {
     issuedAt: Date;
     refreshToken: RefreshTokenResult;
   }
+
+  /** 刷新令牌接口参数 */
+  export interface AccessTokenResult {
+    data: {
+      code: number;
+      data: LoginResult;
+      message: string;
+    }
+  }
 }
 
 /**
@@ -53,9 +62,13 @@ export async function refreshTokenApi(refreshToken: null | string) {
     'Content-Type': 'application/x-www-form-urlencoded',
     Authorization: `Basic ${base64Str('messaging-client:123456')}`,
   };
-  return baseRequestClient.post<AuthApi.LoginResult>(
+  const refreshTokenData = {
+    refresh_token: refreshToken || '',
+    grant_type: 'refresh_token',
+  };
+  return baseRequestClient.post<AuthApi.AccessTokenResult>(
     `${prefix}/oauth2/token`,
-    refreshToken,
+    new URLSearchParams(refreshTokenData).toString(),
     { headers },
   );
 }

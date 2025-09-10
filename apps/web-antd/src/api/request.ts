@@ -54,10 +54,14 @@ function createRequestClient(baseURL: string, options?: RequestClientOptions) {
   async function doRefreshToken() {
     const accessStore = useAccessStore();
     const resp = await refreshTokenApi(accessStore.getRefreshToken());
-    const newToken = resp.accessToken;
-    accessStore.setAccessToken(newToken);
-    accessStore.setRefreshToken(resp.refreshToken.tokenValue);
-    return newToken;
+    if (resp.data.code === 200) {
+      const result = resp.data.data;
+      const newToken = result.accessToken;
+      accessStore.setAccessToken(newToken);
+      accessStore.setRefreshToken(result.refreshToken.tokenValue);
+      return newToken;
+    }
+    return '';
   }
 
   function formatToken(token: null | string) {
