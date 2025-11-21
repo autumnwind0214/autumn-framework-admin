@@ -20,7 +20,6 @@ import {
 import { $t } from '#/locales';
 
 import { useFormSchema } from '../data';
-import type { Recordable } from "@vben-core/typings";
 
 const emits = defineEmits(['success']);
 
