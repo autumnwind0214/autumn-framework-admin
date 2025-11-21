@@ -97,7 +97,7 @@ async function onDisabledChange(
   };
   try {
     await confirm(
-      `你要将${row.roleName}的状态切换为 【${disabled[newDisabled.toString()]}】 吗？`,
+      `你要将${row.username}的状态切换为 【${disabled[newDisabled.toString()]}】 吗？`,
       `切换状态`,
     );
     await updateUserDisabledApi(row.id, newDisabled);

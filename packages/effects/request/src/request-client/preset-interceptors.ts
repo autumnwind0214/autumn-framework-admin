@@ -63,9 +63,10 @@ export const authenticateResponseInterceptor = ({
       // 判断是否启用了 refreshToken 功能
       // 如果没有启用或者已经是重试请求了，直接跳转到重新登录
       // if (!enableRefreshToken || config.__isRetryRequest) {
-      //   await doReAuthenticate();
-      //   throw error;
-      // }
+      if (config.__isRetryRequest) {
+        await doReAuthenticate();
+        throw error;
+      }
       // 如果正在刷新 token，则将请求加入队列，等待刷新完成
       if (client.isRefreshing) {
         return new Promise((resolve) => {
